@@ -18,7 +18,7 @@ export default class LoupedeckButtons
         {
             this.debugFolder = this.debug.addFolder({
                 title: 'loupedeckButtons',
-                expanded: false
+                expanded: true
             })
         }
 

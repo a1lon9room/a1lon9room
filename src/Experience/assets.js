@@ -10,12 +10,12 @@ export default [
             { name: 'loupedeckButtonsModel', source: '/assets/loupedeckButtonsModel.glb', type: 'model' },
             
             { name: 'topChairModel', source: '/assets/topChairModel.glb', type: 'model' },
+
+            { name: 'heroModel', source: '/assets/heroModel.glb', type: 'model' },
             
             { name: 'coffeeSteamModel', source: '/assets/coffeeSteamModel.glb', type: 'model' },
             
             { name: 'elgatoLightModel', source: '/assets/elgatoLightModel.glb', type: 'model' },
-            
-            { name: 'threejsJourneyLogoTexture', source: '/assets/threejsJourneyLogo.png', type: 'texture' },
             
             { name: 'pcScreenModel', source: '/assets/pcScreenModel.glb', type: 'model' },
             

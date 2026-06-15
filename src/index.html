@@ -23,12 +23,171 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="experience"></div>
-    <div class="credits">
-        My Room in 3D by <a href="https://bruno-simon.com" target="_blank">Bruno Simon</a> (<a href="https://github.com/brunosimon/my-room-in-3d" target="_blank">Source code</a>)
+
+    <!-- Bottom-right action buttons -->
+    <div class="ui-buttons">
+        <a class="ui-btn" id="btn-twitter" href="https://x.com/a1lon9room" target="_blank" rel="noopener" aria-label="Twitter" title="Twitter">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+        </a>
+        <button class="ui-btn" id="btn-docs" type="button" aria-label="Documentation" title="Documentation">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8zm0 3.4h8V17H8zm0-6.8h4v1.6H8z"/>
+            </svg>
+        </button>
     </div>
+
+    <!-- Theme switcher (bottom-left color swatches) -->
+    <div class="theme-switch" id="theme-switch" aria-label="Room theme">
+        <button class="theme-dot is-active" type="button" data-theme="neon"    title="Neon"    style="--dot:linear-gradient(135deg,#ff115e,#0082ff)"></button>
+        <button class="theme-dot" type="button" data-theme="vapor"   title="Vapor"   style="--dot:linear-gradient(135deg,#a855f7,#06b6d4)"></button>
+        <button class="theme-dot" type="button" data-theme="matrix"  title="Matrix"  style="--dot:linear-gradient(135deg,#22c55e,#14b8a6)"></button>
+        <button class="theme-dot" type="button" data-theme="sunset"  title="Sunset"  style="--dot:linear-gradient(135deg,#f43f5e,#fbbf24)"></button>
+        <button class="theme-dot" type="button" data-theme="ice"     title="Ice"     style="--dot:linear-gradient(135deg,#38bdf8,#a78bfa)"></button>
+        <button class="theme-dot" type="button" data-theme="gold"    title="Gold"    style="--dot:linear-gradient(135deg,#f59e0b,#fde047)"></button>
+        <button class="theme-dot" type="button" data-theme="cyber"   title="Cyber"   style="--dot:linear-gradient(135deg,#ec4899,#22d3ee)"></button>
+        <button class="theme-dot" type="button" data-theme="blood"   title="Crimson" style="--dot:linear-gradient(135deg,#dc2626,#7f1d1d)"></button>
+        <button class="theme-dot" type="button" data-theme="mono"    title="Mono"    style="--dot:linear-gradient(135deg,#e5e7eb,#6b7280)"></button>
+        <button class="theme-dot" type="button" data-theme="aqua"    title="Aqua"    style="--dot:linear-gradient(135deg,#2dd4bf,#3b82f6)"></button>
+        <div class="mix-row">
+            <span class="mix-label">Night</span>
+            <input class="mix-slider" id="night-mix" type="range" min="0" max="1" step="0.01" value="1" aria-label="Night mix">
+        </div>
+        <div class="mix-row">
+            <span class="mix-label">Light</span>
+            <input class="mix-slider" id="neutral-mix" type="range" min="0" max="1" step="0.01" value="0" aria-label="Neutral light mix">
+        </div>
+    </div>
+
+    <!-- Documentation overlay -->
+    <div class="docs-overlay" id="docs-overlay" aria-hidden="true">
+        <div class="docs-panel" role="dialog" aria-modal="true" aria-labelledby="docs-title">
+            <button class="docs-close" id="docs-close" type="button" aria-label="Close">&times;</button>
+
+            <div class="docs-brand">a1lon9room</div>
+            <h1 id="docs-title">Documentation</h1>
+
+            <p class="docs-lead">
+                a1lon9room is an interactive 3D room you can explore right in your
+                browser — a cozy late-night creator's workspace rebuilt as a real-time
+                WebGL experience.
+            </p>
+
+            <p class="docs-note">
+                This is a fan-made project, created by the community as a tribute to
+                the crypto influencer Alon. It is unofficial and not affiliated with
+                or endorsed by him.
+            </p>
+
+            <h2>What it is</h2>
+            <p>
+                Step into a hand-crafted bedroom-studio: glowing monitors, a streaming
+                setup, a guitar in the corner, shelves full of character, and neon
+                washing over the walls. Everything is rendered live with Three.js and
+                animated in real time — the chair sways, the screens flicker, the neon
+                breathes.
+            </p>
+
+            <h2>The character</h2>
+            <p>
+                At the center sits the room's resident — a stylized 3D avatar lounging
+                in the gaming chair, reacting to the scene around him. He greets you
+                when you arrive and gives the room its personality.
+            </p>
+
+            <h2>Explore</h2>
+            <ul>
+                <li>Drag to orbit the camera and look around the room.</li>
+                <li>Scroll to zoom in on the details.</li>
+                <li>Click the screen on the wall to jump to the Twitter profile.</li>
+            </ul>
+
+            <h2>Tech</h2>
+            <p>
+                Built with Three.js and WebGL, baked lighting for the environment,
+                real-time shading for the character, and the Web Speech API for the
+                voice intro. Designed to run smoothly straight from the browser.
+            </p>
+
+            <div class="docs-footer">
+                <a href="https://x.com/a1lon9room" target="_blank" rel="noopener">Twitter — @a1lon9room</a>
+                <span class="docs-dev">Developed by Ilya Kalashnikow</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var overlay = document.getElementById('docs-overlay');
+            var open = document.getElementById('btn-docs');
+            var close = document.getElementById('docs-close');
+            var show = function () { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden', 'false'); };
+            var hide = function () { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); };
+            open.addEventListener('click', show);
+            close.addEventListener('click', hide);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+            // Keep trackpad/wheel scrolling inside the docs from reaching the
+            // 3D camera zoom (which listens on window)
+            overlay.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
+        })();
+
+        // Room theme switcher — recolors the baked wall glows live
+        (function () {
+            var THEMES = {
+                neon:   { tv: '#ff115e', desk: '#ff6700', pc: '#0082ff' },
+                vapor:  { tv: '#a855f7', desk: '#d946ef', pc: '#06b6d4' },
+                matrix: { tv: '#22c55e', desk: '#84cc16', pc: '#14b8a6' },
+                sunset: { tv: '#f43f5e', desk: '#fb923c', pc: '#fbbf24' },
+                ice:    { tv: '#38bdf8', desk: '#818cf8', pc: '#a78bfa' },
+                gold:   { tv: '#f59e0b', desk: '#fbbf24', pc: '#fde047' },
+                cyber:  { tv: '#ec4899', desk: '#a855f7', pc: '#22d3ee' },
+                blood:  { tv: '#dc2626', desk: '#ef4444', pc: '#7f1d1d' },
+                mono:   { tv: '#e5e7eb', desk: '#9ca3af', pc: '#6b7280' },
+                aqua:   { tv: '#2dd4bf', desk: '#06b6d4', pc: '#3b82f6' }
+            };
+            var dots = document.querySelectorAll('.theme-dot');
+
+            var apply = function (name) {
+                var t = THEMES[name];
+                var exp = window.experience;
+                var baked = exp && exp.world && exp.world.baked;
+                if (!t || !baked || !baked.model || !baked.model.material) return false;
+                var u = baked.model.material.uniforms;
+                u.uLightTvColor.value.set(t.tv);
+                u.uLightDeskColor.value.set(t.desk);
+                u.uLightPcColor.value.set(t.pc);
+                return true;
+            };
+
+            dots.forEach(function (dot) {
+                dot.addEventListener('click', function () {
+                    if (apply(dot.dataset.theme)) {
+                        dots.forEach(function (d) { d.classList.remove('is-active'); });
+                        dot.classList.add('is-active');
+                    }
+                });
+            });
+
+            // Mood sliders — blend the baked day/night/neutral lighting
+            var bindUniform = function (id, uniformName) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('input', function () {
+                    var baked = window.experience && window.experience.world && window.experience.world.baked;
+                    if (!baked || !baked.model || !baked.model.material) return;
+                    var u = baked.model.material.uniforms[uniformName];
+                    if (u) u.value = +el.value;
+                });
+            };
+            bindUniform('night-mix', 'uNightMix');
+            bindUniform('neutral-mix', 'uNeutralMix');
+        })();
+    </script>
 </body>
 </html>

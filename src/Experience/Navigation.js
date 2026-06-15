@@ -50,7 +50,7 @@ export default class Navigation
         this.view.drag.alternative = false
 
         this.view.zoom = {}
-        this.view.zoom.sensitivity = 0.01
+        this.view.zoom.sensitivity = 0.02
         this.view.zoom.delta = 0
 
         /**

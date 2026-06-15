@@ -18,17 +18,319 @@ body
     height: 100vh;
 }
 
-.credits
+/* Bottom-right action buttons (icon-only) */
+.ui-buttons
 {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    color: #ffffff;
-    text-align: right;
-    font-family: 'Roboto', sans-serif;
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    display: flex;
+    gap: 12px;
+    z-index: 20;
 }
 
-.credits a
+.ui-btn
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.78);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.ui-btn svg
 {
     color: inherit;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+
+.ui-btn:hover
+{
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+/* Theme switcher (bottom-left color dots) */
+.theme-switch
+{
+    position: fixed;
+    left: 22px;
+    bottom: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    max-width: 220px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    z-index: 20;
+}
+
+.theme-dot
+{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--dot);
+    cursor: pointer;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-dot:hover
+{
+    transform: scale(1.15);
+}
+
+.theme-dot.is-active
+{
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Mood (day/night/neutral) sliders */
+.mix-row
+{
+    flex: 1 0 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.mix-label
+{
+    flex: 0 0 38px;
+    font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.mix-slider
+{
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 6px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+}
+
+.mix-slider::-webkit-slider-thumb
+{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid rgba(0, 0, 0, 0.35);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+    cursor: grab;
+}
+
+.mix-slider::-moz-range-thumb
+{
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid rgba(0, 0, 0, 0.35);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+    cursor: grab;
+}
+
+/* Documentation overlay */
+.docs-overlay
+{
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(4, 4, 7, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.docs-overlay.is-open
+{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.docs-panel
+{
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    max-height: 82vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 44px 46px 34px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(40, 32, 58, 0.5) 0%, rgba(0, 0, 0, 0) 60%),
+        linear-gradient(165deg, #0d0b13 0%, #070609 100%);
+    color: #b9b4c6;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75);
+    transform: translateY(14px) scale(0.99);
+    transition: transform 0.24s ease;
+}
+
+.docs-overlay.is-open .docs-panel
+{
+    transform: translateY(0) scale(1);
+}
+
+/* Hidden scrollbar — scrolling still works */
+.docs-panel { scrollbar-width: none; -ms-overflow-style: none; }
+.docs-panel::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+.docs-close
+{
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #b9b4c6;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.docs-close:hover
+{
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.docs-brand
+{
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #7c7790;
+}
+
+.docs-panel h1
+{
+    margin: 8px 0 20px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #f4f2f8;
+}
+
+.docs-lead
+{
+    font-size: 16px;
+    line-height: 1.65;
+    color: #d6d2e0;
+    margin-bottom: 26px;
+}
+
+.docs-note
+{
+    margin-bottom: 24px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    background: rgba(167, 139, 250, 0.08);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #b8b0cf;
+}
+
+.docs-panel h2
+{
+    margin: 26px 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6f6a85;
+}
+
+.docs-panel p
+{
+    font-size: 15px;
+    line-height: 1.68;
+    color: #aaa4ba;
+}
+
+.docs-panel ul
+{
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #aaa4ba;
+}
+
+.docs-footer
+{
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.docs-footer a
+{
+    color: #e8e6ef;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding-bottom: 2px;
+}
+
+.docs-footer a:hover
+{
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.docs-dev
+{
+    font-size: 13px;
+    color: #6f6a85;
+    letter-spacing: 0.02em;
+}
+
+@media (max-width: 520px)
+{
+    .docs-panel { padding: 34px 24px 28px; }
 }

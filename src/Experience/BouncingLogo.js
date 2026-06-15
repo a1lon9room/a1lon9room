@@ -2,28 +2,57 @@ import * as THREE from 'three'
 
 import Experience from './Experience.js'
 
+// DVD-style bouncing "twitter @a1lon9room" on the TV. Clicking it opens the
+// profile; hovering shows a pointer cursor.
+const TWITTER_URL = 'https://x.com/a1lon9room'
+
 export default class BouncingLogo
 {
     constructor()
     {
         this.experience = new Experience()
         this.resources = this.experience.resources
-        this.debug = this.experience.debug
         this.scene = this.experience.scene
         this.world = this.experience.world
         this.time = this.experience.time
-
-        // Debug
-        if(this.debug)
-        {
-            this.debugFolder = this.debug.addFolder({
-                title: 'bouncingLogo',
-                expanded: false
-            })
-        }
+        this.camera = this.experience.camera
+        this.targetElement = this.experience.targetElement
 
         this.setModel()
         this.setAnimation()
+        this.setInteraction()
+    }
+
+    createTexture()
+    {
+        const canvas = document.createElement('canvas')
+        canvas.width = 1024
+        canvas.height = 256
+
+        const context = canvas.getContext('2d')
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        context.textAlign = 'center'
+        context.textBaseline = 'middle'
+
+        // "twitter" + handle, neon green to match the room (no logo mark)
+        const green = '#4ade80'
+
+        context.font = '900 78px Arial, sans-serif'
+        context.shadowColor = green
+        context.shadowBlur = 26
+        context.fillStyle = '#ffffff'
+        context.fillText('twitter', canvas.width * 0.5, canvas.height * 0.32)
+
+        context.font = '900 122px Arial, sans-serif'
+        context.fillStyle = green
+        context.shadowBlur = 30
+        context.fillText('@a1lon9room', canvas.width * 0.5, canvas.height * 0.7)
+
+        const texture = new THREE.CanvasTexture(canvas)
+        texture.encoding = THREE.sRGBEncoding
+        texture.anisotropy = 4
+
+        return texture
     }
 
     setModel()
@@ -36,15 +65,13 @@ export default class BouncingLogo
         this.model.group.position.z = 1.630
         this.scene.add(this.model.group)
 
-        this.model.texture = this.resources.items.threejsJourneyLogoTexture
-        this.model.texture.encoding = THREE.sRGBEncoding
+        this.model.texture = this.createTexture()
 
         this.model.geometry = new THREE.PlaneGeometry(4, 1, 1, 1)
         this.model.geometry.rotateY(- Math.PI * 0.5)
 
         this.model.material = new THREE.MeshBasicMaterial({
             transparent: true,
-            premultipliedAlpha: true,
             map: this.model.texture
         })
 
@@ -52,50 +79,6 @@ export default class BouncingLogo
         this.model.mesh.scale.y = 0.359
         this.model.mesh.scale.z = 0.424
         this.model.group.add(this.model.mesh)
-
-        // Debug
-        if(this.debug)
-        {
-            this.debugFolder.addInput(
-                this.model.group.position,
-                'x',
-                {
-                    label: 'positionX', min: - 5, max: 5, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.model.group.position,
-                'y',
-                {
-                    label: 'positionY', min: - 5, max: 5, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.model.group.position,
-                'z',
-                {
-                    label: 'positionZ', min: - 5, max: 5, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.model.mesh.scale,
-                'z',
-                {
-                    label: 'scaleZ', min: 0.001, max: 1, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.model.mesh.scale,
-                'y',
-                {
-                    label: 'scaleY', min: 0.001, max: 1, step: 0.001
-                }
-            )
-        }
     }
 
     setAnimation()
@@ -112,57 +95,47 @@ export default class BouncingLogo
         this.animations.speed = {}
         this.animations.speed.z = 0.00061
         this.animations.speed.y = 0.00037
+    }
 
-        if(this.debug)
+    setInteraction()
+    {
+        this.raycaster = new THREE.Raycaster()
+        this.pointer = new THREE.Vector2()
+
+        const element = this.targetElement
+        if(!element)
+            return
+
+        // Cast from the pointer through the camera onto the bouncing plane
+        const intersects = (event) =>
         {
-            this.debugFolder.addInput(
-                this.animations.limits.z,
-                'min',
-                {
-                    label: 'limitZMin', min: - 3, max: 0, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.animations.limits.z,
-                'max',
-                {
-                    label: 'limitZMax', min: 0, max: 3, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.animations.limits.y,
-                'min',
-                {
-                    label: 'limitYMin', min: - 3, max: 0, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.animations.limits.y,
-                'max',
-                {
-                    label: 'limitYMax', min: 0, max: 3, step: 0.001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.animations.speed,
-                'z',
-                {
-                    label: 'speedZ', min: 0, max: 0.001, step: 0.00001
-                }
-            )
-
-            this.debugFolder.addInput(
-                this.animations.speed,
-                'y',
-                {
-                    label: 'speedY', min: 0, max: 0.001, step: 0.00001
-                }
-            )
+            const rect = element.getBoundingClientRect()
+            this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+            this.pointer.y = - ((event.clientY - rect.top) / rect.height) * 2 + 1
+            this.raycaster.setFromCamera(this.pointer, this.camera.instance)
+            return this.raycaster.intersectObject(this.model.mesh, false).length > 0
         }
+
+        // Hover → pointer cursor
+        element.addEventListener('mousemove', (event) =>
+        {
+            element.style.cursor = intersects(event) ? 'pointer' : ''
+        })
+
+        // Distinguish a click from a camera drag
+        let downX = 0
+        let downY = 0
+        element.addEventListener('mousedown', (event) =>
+        {
+            downX = event.clientX
+            downY = event.clientY
+        })
+        element.addEventListener('mouseup', (event) =>
+        {
+            const moved = Math.hypot(event.clientX - downX, event.clientY - downY)
+            if(moved < 6 && intersects(event))
+                window.open(TWITTER_URL, '_blank', 'noopener')
+        })
     }
 
     update()

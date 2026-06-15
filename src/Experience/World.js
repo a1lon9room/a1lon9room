@@ -5,9 +5,12 @@ import GoogleLeds from './GoogleLeds.js'
 import LoupedeckButtons from './LoupedeckButtons.js'
 import CoffeeSteam from './CoffeeSteam.js'
 import TopChair from './TopChair.js'
+import Doll from './Doll.js'
 import ElgatoLight from './ElgatoLight.js'
+import PumpScreens from './PumpScreens.js'
+import PumpDecor from './PumpDecor.js'
 import BouncingLogo from './BouncingLogo.js'
-import Screen from './Screen.js'
+import Voice from './Voice.js'
 
 export default class World
 {
@@ -27,9 +30,12 @@ export default class World
                 this.setLoupedeckButtons()
                 this.setCoffeeSteam()
                 this.setTopChair()
+                this.setDoll()
                 this.setElgatoLight()
-                this.setBouncingLogo()
                 this.setScreens()
+                this.setPumpDecor()
+                this.setBouncingLogo()
+                this.setVoice()
             }
         })
     }
@@ -59,9 +65,24 @@ export default class World
         this.topChair = new TopChair()
     }
 
+    setDoll()
+    {
+        this.doll = new Doll()
+    }
+
     setElgatoLight()
     {
         this.elgatoLight = new ElgatoLight()
+    }
+
+    setScreens()
+    {
+        this.pumpScreens = new PumpScreens()
+    }
+
+    setPumpDecor()
+    {
+        this.pumpDecor = new PumpDecor()
     }
 
     setBouncingLogo()
@@ -69,16 +90,9 @@ export default class World
         this.bouncingLogo = new BouncingLogo()
     }
 
-    setScreens()
+    setVoice()
     {
-        this.pcScreen = new Screen(
-            this.resources.items.pcScreenModel.scene.children[0],
-            '/assets/videoPortfolio.mp4'
-        )
-        this.macScreen = new Screen(
-            this.resources.items.macScreenModel.scene.children[0],
-            '/assets/videoStream.mp4'
-        )
+        this.voice = new Voice()
     }
 
     resize()
@@ -98,6 +112,15 @@ export default class World
 
         if(this.topChair)
             this.topChair.update()
+
+        if(this.doll)
+            this.doll.update()
+
+        if(this.pumpScreens)
+            this.pumpScreens.update()
+
+        if(this.pumpDecor)
+            this.pumpDecor.update()
 
         if(this.bouncingLogo)
             this.bouncingLogo.update()
