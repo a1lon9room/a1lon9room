@@ -35,12 +35,8 @@
                 <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
         </a>
-        <a class="ui-btn" id="btn-pump" href="https://pump.fun/coin/CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump" target="_blank" rel="noopener" aria-label="pump.fun" title="pump.fun">
-            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-                <rect x="3" y="10" width="18" height="7" rx="3.5" fill="#4ade80"/>
-                <rect x="3" y="3" width="18" height="7" rx="3.5" fill="#ffffff"/>
-                <rect x="3" y="9.5" width="18" height="1" fill="rgba(0,0,0,0.12)"/>
-            </svg>
+        <a class="ui-btn ui-btn--pump" id="btn-pump" href="https://pump.fun/coin/CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump" target="_blank" rel="noopener" aria-label="pump.fun" title="pump.fun">
+            <img class="ui-btn__logo" id="btn-pump-logo" alt="" width="22" height="22">
         </a>
         <a class="ui-btn" id="btn-github" href="https://github.com/a1lon9room" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
             <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true">
@@ -193,6 +189,14 @@
                     done();
                 }
             });
+        })();
+    </script>
+
+    <script>
+        // pump.fun button logo (static asset — avoids html-loader path issues)
+        (function () {
+            var img = document.getElementById('btn-pump-logo');
+            if (img) img.src = '/assets/pumpfun-logo.png';
         })();
     </script>
 
