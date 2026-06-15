@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Room in 3D</title>
+    <title>A1LON9ROOM</title>
 
-    <meta itemprop="name" content="My Room in 3D — Experiment">
-    <meta itemprop="description" content="Creative WebGL experiment with Three.js">
-    <meta itemprop="image" content="https://my-room-in-3d.vercel.app/social/share-1200x630.png">
+    <meta itemprop="name" content="A1LON9ROOM">
+    <meta itemprop="description" content="Interactive 3D room experience by a1lon9room">
+    <meta itemprop="image" content="https://www.a1lon9room.fun/assets/header-avatar.png">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="My Room in 3D — Experiment">
-    <meta name="twitter:description" content="Creative WebGL experiment with Three.js">
-    <meta name="twitter:image" content="https://my-room-in-3d.vercel.app/social/share-1200x630.png">
+    <meta name="twitter:title" content="A1LON9ROOM">
+    <meta name="twitter:description" content="Interactive 3D room experience by a1lon9room">
+    <meta name="twitter:image" content="https://www.a1lon9room.fun/assets/header-avatar.png">
 
-    <meta property="og:site_name" content="My Room in 3D — Experiment">
+    <meta property="og:site_name" content="A1LON9ROOM">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://my-room-in-3d.vercel.app">
-    <meta property="og:title" content="My Room in 3D — Experiment">
-    <meta property="og:description" content="Creative WebGL experiment with Three.js">
-    <meta property="og:image" content="https://my-room-in-3d.vercel.app/social/share-1200x630.png">
+    <meta property="og:url" content="https://www.a1lon9room.fun">
+    <meta property="og:title" content="A1LON9ROOM">
+    <meta property="og:description" content="Interactive 3D room experience by a1lon9room">
+    <meta property="og:image" content="https://www.a1lon9room.fun/assets/header-avatar.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header class="site-header" aria-label="Site header">
+        <img class="site-header__avatar" id="site-header-avatar" alt="A1LON9ROOM avatar" width="40" height="40">
+        <span class="site-header__title">A1LON9ROOM</span>
+    </header>
+
     <div class="experience"></div>
 
     <!-- Bottom-right action buttons -->
@@ -68,6 +73,10 @@
             <input class="mix-slider" id="neutral-mix" type="range" min="0" max="1" step="0.01" value="0" aria-label="Neutral light mix">
         </div>
     </div>
+
+    <script>
+        document.getElementById('site-header-avatar').src = '/assets/header-avatar.png';
+    </script>
 
     <script>
         // Room theme switcher — recolors the baked wall glows live
