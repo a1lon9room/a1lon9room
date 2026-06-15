@@ -35,6 +35,13 @@
                 <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
         </a>
+        <a class="ui-btn" id="btn-pump" href="https://pump.fun/coin/CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump" target="_blank" rel="noopener" aria-label="pump.fun" title="pump.fun">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                <rect x="3" y="10" width="18" height="7" rx="3.5" fill="#4ade80"/>
+                <rect x="3" y="3" width="18" height="7" rx="3.5" fill="#ffffff"/>
+                <rect x="3" y="9.5" width="18" height="1" fill="rgba(0,0,0,0.12)"/>
+            </svg>
+        </a>
         <a class="ui-btn" id="btn-github" href="https://github.com/a1lon9room" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
             <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true">
                 <path fill="currentColor" d="M12 1.27a11 11 0 0 0-3.48 21.46c.55.09.73-.24.73-.53v-1.85c-3.03.66-3.67-1.46-3.67-1.46-.5-1.27-1.21-1.6-1.21-1.6-.99-.68.07-.67.07-.67 1.1.08 1.67 1.13 1.67 1.13.97 1.66 2.55 1.18 3.17.9.1-.7.38-1.18.69-1.45-2.42-.28-4.96-1.21-4.96-5.38 0-1.19.42-2.16 1.13-2.92-.11-.28-.49-1.39.11-2.9 0 0 .92-.29 3.02 1.11a10.5 10.5 0 0 1 5.5 0c2.1-1.4 3.02-1.11 3.02-1.11.6 1.51.22 2.62.11 2.9.7.76 1.13 1.73 1.13 2.92 0 4.18-2.55 5.1-4.98 5.37.39.34.74 1 .74 2.02v3c0 .29.18.63.74.52A11 11 0 0 0 12 1.27"/>
@@ -110,7 +117,26 @@
                 <li>Drag to orbit the camera and look around the room.</li>
                 <li>Scroll to zoom in on the details.</li>
                 <li>Click the screen on the wall to jump to the Twitter profile.</li>
+                <li>Watch live market data on the desk monitor via DexScreener.</li>
             </ul>
+
+            <h2>Token</h2>
+            <p>
+                Community token for this project — created to support the developer
+                who built and maintains a1lon9room.
+            </p>
+            <div class="docs-contract">
+                <code class="docs-contract__address" id="docs-contract-address">CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump</code>
+                <button class="docs-contract__copy" id="docs-contract-copy" type="button">Copy</button>
+            </div>
+            <p class="docs-disclaimer">
+                This token is not financial advice. It does not promise returns,
+                guarantees, or official affiliation. It exists solely to support
+                the developer of this fan-made project.
+            </p>
+            <p>
+                <a href="https://pump.fun/coin/CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump" target="_blank" rel="noopener">View on pump.fun →</a>
+            </p>
 
             <h2>Tech</h2>
             <p>
@@ -141,6 +167,32 @@
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
             // Keep trackpad/wheel scrolling inside the docs from reaching the 3D camera zoom
             overlay.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
+        })();
+    </script>
+
+    <script>
+        // Copy token contract from documentation
+        (function () {
+            var btn = document.getElementById('docs-contract-copy');
+            var addr = document.getElementById('docs-contract-address');
+            if (!btn || !addr) return;
+            var resetTimer;
+            btn.addEventListener('click', function () {
+                var text = addr.textContent.trim();
+                var done = function () {
+                    btn.textContent = 'Copied!';
+                    clearTimeout(resetTimer);
+                    resetTimer = setTimeout(function () { btn.textContent = 'Copy'; }, 1800);
+                };
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(done).catch(function () {
+                        window.prompt('Copy contract address:', text);
+                    });
+                } else {
+                    window.prompt('Copy contract address:', text);
+                    done();
+                }
+            });
         })();
     </script>
 

@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 
 // Watched token: live data pulled from the DexScreener public API
-const TOKEN_ADDRESS = '6ko852fpenuBeyQF3L6G4gJt17x7zpNdW55JgRndpump'
+const TOKEN_ADDRESS = 'CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump'
 const DEX_API = 'https://api.dexscreener.com/latest/dex/tokens/' + TOKEN_ADDRESS
 const FETCH_INTERVAL = 30000
 
@@ -50,6 +50,7 @@ export default class PumpScreens
                 if(!pair)
                 {
                     this.dex.status = 'waiting'
+                    this.drawTrading()
                     return
                 }
 
@@ -64,11 +65,13 @@ export default class PumpScreens
                 this.dex.marketCap = pair.marketCap || pair.fdv || null
                 this.dex.buys = pair.txns && pair.txns.h24 ? pair.txns.h24.buys : null
                 this.dex.sells = pair.txns && pair.txns.h24 ? pair.txns.h24.sells : null
+                this.drawTrading()
             })
             .catch(() =>
             {
                 if(this.dex.status === 'loading')
                     this.dex.status = 'waiting'
+                this.drawTrading()
             })
     }
 
@@ -173,50 +176,153 @@ export default class PumpScreens
     drawTrading()
     {
         const ctx = this.trading.context
-        const t = this.time ? this.time.elapsed : Date.now()
+        const dex = this.dex
+        const candles = this.trading.candles
+        const w = 1024
+        const h = 512
 
         // Dark gradient backdrop
-        const bg = ctx.createLinearGradient(0, 0, 0, 512)
+        const bg = ctx.createLinearGradient(0, 0, 0, h)
         bg.addColorStop(0, '#0c1410')
         bg.addColorStop(1, '#070a09')
         ctx.fillStyle = bg
-        ctx.fillRect(0, 0, 1024, 512)
+        ctx.fillRect(0, 0, w, h)
 
-        // Soft green glow behind the word
-        const glow = ctx.createRadialGradient(512, 250, 40, 512, 250, 420)
-        glow.addColorStop(0, 'rgba(74, 222, 128, 0.18)')
-        glow.addColorStop(1, 'rgba(74, 222, 128, 0)')
-        ctx.fillStyle = glow
-        ctx.fillRect(0, 0, 1024, 512)
+        // Header bar
+        ctx.fillStyle = '#111916'
+        ctx.fillRect(0, 0, w, 72)
 
-        // Ticker label
-        ctx.textAlign = 'center'
-        ctx.fillStyle = '#7c8b80'
-        ctx.font = '700 30px Arial'
-        ctx.letterSpacing = '8px'
-        ctx.fillText('$A1LON9ROOM', 512, 150)
-        ctx.letterSpacing = '0px'
-
-        // Big pulsing SOON
-        const pulse = 0.5 + Math.sin(t * 0.0025) * 0.5
-        ctx.shadowColor = '#4ade80'
-        ctx.shadowBlur = 30 + pulse * 40
         ctx.fillStyle = '#4ade80'
-        ctx.font = '900 200px "Arial Black", Arial, sans-serif'
-        ctx.fillText('SOON', 512, 300)
+        ctx.font = '900 22px Arial'
+        ctx.textAlign = 'left'
+        ctx.fillText('DexScreener', 20, 44)
 
-        // Bright core
-        ctx.shadowBlur = 8
-        ctx.fillStyle = '#eaffd6'
-        ctx.font = '900 200px "Arial Black", Arial, sans-serif'
-        ctx.fillText('SOON', 512, 300)
-        ctx.shadowBlur = 0
+        const statusColor = dex.status === 'live' ? '#4ade80' : '#7c8b80'
+        ctx.fillStyle = statusColor
+        ctx.font = '700 16px Arial'
+        ctx.textAlign = 'right'
+        const statusLabel = dex.status === 'live' ? '● LIVE' : dex.status === 'waiting' ? '○ WAITING' : '… LOADING'
+        ctx.fillText(statusLabel, w - 20, 44)
+        ctx.textAlign = 'left'
 
-        // Animated loading dots
-        ctx.fillStyle = '#7c8b80'
-        ctx.font = '700 28px Arial'
-        const dots = '.'.repeat(1 + (Math.floor(t / 500) % 3))
-        ctx.fillText('loading' + dots, 512, 410)
+        // Token row
+        const symbol = dex.symbol ? '$' + dex.symbol : '$A1LON9ROOM'
+        ctx.fillStyle = '#ffffff'
+        ctx.font = '900 34px Arial'
+        ctx.fillText(symbol, 20, 108)
+
+        if(dex.status === 'live' && dex.priceUsd !== null)
+        {
+            const change = dex.change24h
+            const changeColor = change >= 0 ? '#4ade80' : '#f87171'
+            ctx.fillStyle = '#eaffd6'
+            ctx.font = '900 28px Arial'
+            ctx.fillText(this.formatPrice(dex.priceUsd), 20, 148)
+
+            if(change !== null && !isNaN(change))
+            {
+                ctx.fillStyle = changeColor
+                ctx.font = '700 22px Arial'
+                ctx.fillText((change >= 0 ? '+' : '') + change.toFixed(2) + '%', 220, 148)
+            }
+        }
+        else
+        {
+            ctx.fillStyle = '#7c8b80'
+            ctx.font = '700 24px Arial'
+            ctx.fillText(dex.status === 'waiting' ? 'Waiting for launch…' : 'Fetching market data…', 20, 148)
+        }
+
+        // Stats row
+        const stats = [
+            { label: 'MCap', value: this.formatUsd(dex.marketCap) },
+            { label: 'Liq', value: this.formatUsd(dex.liquidity) },
+            { label: 'Vol 24h', value: this.formatUsd(dex.volume24h) },
+            { label: 'Buys', value: dex.buys !== null ? String(dex.buys) : '—' },
+            { label: 'Sells', value: dex.sells !== null ? String(dex.sells) : '—' }
+        ]
+
+        const statW = (w - 40) / stats.length
+        ctx.font = '700 13px Arial'
+        for(let i = 0; i < stats.length; i++)
+        {
+            const x = 20 + i * statW
+            ctx.fillStyle = '#6f7a72'
+            ctx.fillText(stats[i].label, x, 182)
+            ctx.fillStyle = '#d6e8dc'
+            ctx.font = '900 18px Arial'
+            ctx.fillText(stats[i].value, x, 206)
+            ctx.font = '700 13px Arial'
+        }
+
+        // Chart area
+        const chartX = 20
+        const chartY = 228
+        const chartW = w - 40
+        const chartH = h - chartY - 20
+
+        ctx.fillStyle = '#0a100d'
+        this.roundRect(ctx, chartX, chartY, chartW, chartH, 10)
+        ctx.fill()
+
+        if(candles.length >= 2)
+        {
+            let min = Infinity
+            let max = -Infinity
+            for(const c of candles)
+            {
+                min = Math.min(min, c.low)
+                max = Math.max(max, c.high)
+            }
+            const pad = (max - min) * 0.08 || max * 0.01
+            min -= pad
+            max += pad
+            const range = max - min || 1
+
+            const candleW = chartW / candles.length
+            const bodyW = Math.max(4, candleW * 0.55)
+
+            for(let i = 0; i < candles.length; i++)
+            {
+                const c = candles[i]
+                const bullish = c.close >= c.open
+                const color = bullish ? '#4ade80' : '#f87171'
+                const cx = chartX + i * candleW + candleW * 0.5
+
+                const yHigh = chartY + chartH - ((c.high - min) / range) * chartH
+                const yLow = chartY + chartH - ((c.low - min) / range) * chartH
+                const yOpen = chartY + chartH - ((c.open - min) / range) * chartH
+                const yClose = chartY + chartH - ((c.close - min) / range) * chartH
+
+                ctx.strokeStyle = color
+                ctx.lineWidth = 2
+                ctx.beginPath()
+                ctx.moveTo(cx, yHigh)
+                ctx.lineTo(cx, yLow)
+                ctx.stroke()
+
+                const top = Math.min(yOpen, yClose)
+                const bodyH = Math.max(2, Math.abs(yClose - yOpen))
+                ctx.fillStyle = color
+                ctx.fillRect(cx - bodyW * 0.5, top, bodyW, bodyH)
+            }
+        }
+        else
+        {
+            ctx.fillStyle = '#4ade80'
+            ctx.font = '700 20px Arial'
+            ctx.textAlign = 'center'
+            ctx.fillText('Chart warming up…', w * 0.5, chartY + chartH * 0.5)
+            ctx.textAlign = 'left'
+        }
+
+        // Contract footer
+        ctx.fillStyle = '#3d4a42'
+        ctx.font = '700 14px monospace'
+        ctx.textAlign = 'center'
+        const shortAddr = TOKEN_ADDRESS.slice(0, 6) + '…' + TOKEN_ADDRESS.slice(-6)
+        ctx.fillText(shortAddr, w * 0.5, h - 10)
+        ctx.textAlign = 'left'
 
         this.trading.texture.needsUpdate = true
     }
