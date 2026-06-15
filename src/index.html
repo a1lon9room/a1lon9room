@@ -26,11 +26,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="site-header" aria-label="Site header">
-        <img class="site-header__avatar" id="site-header-avatar" alt="a1lon9room avatar" width="40" height="40">
-        <span class="site-header__title">a1lon9room</span>
-    </header>
-
     <div class="experience"></div>
 
     <!-- Bottom-right action buttons -->
@@ -45,11 +40,11 @@
                 <path fill="currentColor" d="M12 1.27a11 11 0 0 0-3.48 21.46c.55.09.73-.24.73-.53v-1.85c-3.03.66-3.67-1.46-3.67-1.46-.5-1.27-1.21-1.6-1.21-1.6-.99-.68.07-.67.07-.67 1.1.08 1.67 1.13 1.67 1.13.97 1.66 2.55 1.18 3.17.9.1-.7.38-1.18.69-1.45-2.42-.28-4.96-1.21-4.96-5.38 0-1.19.42-2.16 1.13-2.92-.11-.28-.49-1.39.11-2.9 0 0 .92-.29 3.02 1.11a10.5 10.5 0 0 1 5.5 0c2.1-1.4 3.02-1.11 3.02-1.11.6 1.51.22 2.62.11 2.9.7.76 1.13 1.73 1.13 2.92 0 4.18-2.55 5.1-4.98 5.37.39.34.74 1 .74 2.02v3c0 .29.18.63.74.52A11 11 0 0 0 12 1.27"/>
             </svg>
         </a>
-        <a class="ui-btn" id="btn-docs" href="https://github.com/a1lon9room/ALONROOM#readme" target="_blank" rel="noopener" aria-label="Documentation" title="Documentation">
+        <button class="ui-btn" id="btn-docs" type="button" aria-label="Documentation" title="Documentation">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.6H8zm0 3.4h8V17H8zm0-6.8h4v1.6H8z"/>
             </svg>
-        </a>
+        </button>
     </div>
 
     <!-- Theme switcher (bottom-left color swatches) -->
@@ -74,8 +69,94 @@
         </div>
     </div>
 
+    <!-- Documentation overlay -->
+    <div class="docs-overlay" id="docs-overlay" aria-hidden="true">
+        <div class="docs-panel" role="dialog" aria-modal="true" aria-labelledby="docs-title">
+            <button class="docs-close" id="docs-close" type="button" aria-label="Close">&times;</button>
+
+            <div class="docs-brand">a1lon9room</div>
+            <h1 id="docs-title">Documentation</h1>
+
+            <p class="docs-lead">
+                a1lon9room is an interactive 3D room you can explore right in your
+                browser — a cozy late-night creator's workspace rebuilt as a real-time
+                WebGL experience.
+            </p>
+
+            <p class="docs-note">
+                This is a fan-made project, created by the community as a tribute to
+                the crypto influencer Alon. It is unofficial and not affiliated with
+                or endorsed by him.
+            </p>
+
+            <h2>What it is</h2>
+            <p>
+                Step into a hand-crafted bedroom-studio: glowing monitors, a streaming
+                setup, a guitar in the corner, shelves full of character, and neon
+                washing over the walls. Everything is rendered live with Three.js and
+                animated in real time — the chair sways, the screens flicker, the neon
+                breathes.
+            </p>
+
+            <h2>The character</h2>
+            <p>
+                At the center sits the room's resident — a stylized 3D avatar lounging
+                in the gaming chair, reacting to the scene around him. He greets you
+                when you arrive and gives the room its personality.
+            </p>
+
+            <h2>Explore</h2>
+            <ul>
+                <li>Drag to orbit the camera and look around the room.</li>
+                <li>Scroll to zoom in on the details.</li>
+                <li>Click the screen on the wall to jump to the Twitter profile.</li>
+            </ul>
+
+            <h2>Tech</h2>
+            <p>
+                Built with Three.js and WebGL, baked lighting for the environment,
+                real-time shading for the character, and the Web Speech API for the
+                voice intro. Designed to run smoothly straight from the browser.
+            </p>
+
+            <div class="docs-footer">
+                <a href="https://x.com/a1lon9room" target="_blank" rel="noopener">Twitter — @a1lon9room</a>
+                <span class="docs-dev">Developed by Ilya Kalashnikow</span>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('site-header-avatar').src = '/assets/header-avatar.png';
+        // Documentation modal (open from the Docs button)
+        (function () {
+            var overlay = document.getElementById('docs-overlay');
+            var open = document.getElementById('btn-docs');
+            var close = document.getElementById('docs-close');
+            var show = function () { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden', 'false'); };
+            var hide = function () { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); };
+            open.addEventListener('click', show);
+            close.addEventListener('click', hide);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+            // Keep trackpad/wheel scrolling inside the docs from reaching the 3D camera zoom
+            overlay.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
+        })();
+    </script>
+
+    <script>
+        // Set the browser-tab favicon to the Alon logo at runtime (avoids the
+        // build-time html-loader trying to resolve a static path)
+        (function () {
+            var link = document.querySelector("link[rel='icon']") || document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/png';
+            link.href = '/assets/header-avatar.png';
+            document.head.appendChild(link);
+            var apple = document.createElement('link');
+            apple.rel = 'apple-touch-icon';
+            apple.href = '/assets/header-avatar.png';
+            document.head.appendChild(apple);
+        })();
     </script>
 
     <script>
