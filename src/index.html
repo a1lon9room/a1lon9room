@@ -121,17 +121,13 @@
                 Community token for this project — created to support the developer
                 who built and maintains a1lon9room.
             </p>
-            <div class="docs-contract">
-                <code class="docs-contract__address" id="docs-contract-address">CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump</code>
-                <button class="docs-contract__copy" id="docs-contract-copy" type="button">Copy</button>
-            </div>
+            <p>
+                Launch coming soon on <strong>Orynth</strong>. Ticker: <strong>$a1lon9room</strong>
+            </p>
             <p class="docs-disclaimer">
                 This token is not financial advice. It does not promise returns,
                 guarantees, or official affiliation. It exists solely to support
                 the developer of this fan-made project.
-            </p>
-            <p>
-                <a href="https://pump.fun/coin/CTEQjcZwFfsLavSWSiQn4VYKgYXqnevUdxfcbLELpump" target="_blank" rel="noopener">View on pump.fun →</a>
             </p>
 
             <h2>Tech</h2>
@@ -163,32 +159,6 @@
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
             // Keep trackpad/wheel scrolling inside the docs from reaching the 3D camera zoom
             overlay.addEventListener('wheel', function (e) { e.stopPropagation(); }, { passive: true });
-        })();
-    </script>
-
-    <script>
-        // Copy token contract from documentation
-        (function () {
-            var btn = document.getElementById('docs-contract-copy');
-            var addr = document.getElementById('docs-contract-address');
-            if (!btn || !addr) return;
-            var resetTimer;
-            btn.addEventListener('click', function () {
-                var text = addr.textContent.trim();
-                var done = function () {
-                    btn.textContent = 'Copied!';
-                    clearTimeout(resetTimer);
-                    resetTimer = setTimeout(function () { btn.textContent = 'Copy'; }, 1800);
-                };
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text).then(done).catch(function () {
-                        window.prompt('Copy contract address:', text);
-                    });
-                } else {
-                    window.prompt('Copy contract address:', text);
-                    done();
-                }
-            });
         })();
     </script>
 
