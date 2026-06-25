@@ -6,7 +6,7 @@ tribute to the crypto influencer Alon. Unofficial and not affiliated with him.
 ## Links
 
 - [GitHub](https://github.com/a1lon9room/a1lon9room)
-- [Twitter / X](https://x.com/a1lon9room)
+- [Twitter / X](https://x.com/fourmemese)
 
 ## Setup
 

@@ -2,9 +2,9 @@ import * as THREE from 'three'
 
 import Experience from './Experience.js'
 
-// DVD-style bouncing "twitter @a1lon9room" on the TV. Clicking it opens the
+// DVD-style bouncing "twitter @fourmemese" on the TV. Clicking it opens the
 // profile; hovering shows a pointer cursor.
-const TWITTER_URL = 'https://x.com/a1lon9room'
+const TWITTER_URL = 'https://x.com/fourmemese'
 
 export default class BouncingLogo
 {
@@ -46,7 +46,7 @@ export default class BouncingLogo
         context.font = '900 122px Arial, sans-serif'
         context.fillStyle = green
         context.shadowBlur = 30
-        context.fillText('@a1lon9room', canvas.width * 0.5, canvas.height * 0.7)
+        context.fillText('@fourmemese', canvas.width * 0.5, canvas.height * 0.7)
 
         const texture = new THREE.CanvasTexture(canvas)
         texture.encoding = THREE.sRGBEncoding
